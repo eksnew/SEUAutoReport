@@ -9,8 +9,8 @@ import re
 class Browser():
     def __init__(self):
         self.browser = webdriver.Chrome()
-        self.username = "填写你的用户名"
-        self.password = "填写你的密码"
+        self.username = "这里填写你的一卡通"
+        self.password = "这里填写你的密码"
 
         self.login_url = "http://ehall.seu.edu.cn/new/index.html"
         self.main_page = "http://ehall.seu.edu.cn/amp3/index.html#/home"
@@ -36,6 +36,7 @@ class Browser():
             By.XPATH, '//*[@id="xsfw"]')
         username_input.send_keys(self.username)
         password_input.send_keys(self.password)
+        time.sleep(1)
         student_login_button.click()
 
     def get_page_source(self, url):
@@ -57,6 +58,7 @@ class Browser():
 
     def daily_report(self):
         '''信息化自动填报'''
+        self.browser.get(self.main_page)
         self.function_search("全校师生每日健康申报系统")
         # 切换为新窗口
         handles = self.browser.window_handles
@@ -113,4 +115,4 @@ class Browser():
 test = Browser()
 test.login()
 test.daily_report()
-time.sleep(10)
+time.sleep(1)
