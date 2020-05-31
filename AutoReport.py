@@ -47,15 +47,6 @@ class Browser():
         '''获取当前url'''
         return str(self.browser.current_url)
 
-    def fetch_balance(self):
-        '''获取账户余额'''
-        self.browser.get(self.main_page)
-
-        contents = WebDriverWait(self.browser, 15).until(expected_conditions.presence_of_element_located(
-            (By.XPATH, '//*[@id="app"]/div[1]/div/div[2]/div[2]/div[1]/div/div[1]/div/div[1]/div[2]/div/a/div[2]/span[1]')))
-        result = re.findall("\d+\.\d{2}", str(contents.text), re.S)
-        return str(result)
-
     def daily_report(self):
         '''信息化自动填报'''
         self.browser.get(self.main_page)
