@@ -7,10 +7,11 @@ import re
 
 
 class Browser():
-    def __init__(self):
+    def __init__(self, cardnumber, passcode):
+        
         self.browser = webdriver.Chrome()
-        self.username = "这里填写你的一卡通"
-        self.password = "这里填写你的密码"
+        self.username = cardnumber
+        self.password = passcode
 
         self.login_url = "http://ehall.seu.edu.cn/new/index.html"
         self.main_page = "http://ehall.seu.edu.cn/amp3/index.html#/home"
@@ -20,7 +21,7 @@ class Browser():
         self.browser.get(self.login_url)
 
         # 等待加载登录按钮
-        login_button = WebDriverWait(self.browser, 15).until(
+        login_button = WebDriverWait(self.browser, 5).until(
             expected_conditions.element_to_be_clickable((By.XPATH, '//*[@id="ampHasNoLogin"]')))
         login_button.click()
 
@@ -28,7 +29,7 @@ class Browser():
         self.browser.get(self.get_current_url())
 
         # 执行登录
-        username_input = WebDriverWait(self.browser, 15).until(
+        username_input = WebDriverWait(self.browser, 5).until(
             expected_conditions.presence_of_element_located((By.XPATH, '//*[@id="username"]')))
         password_input = self.browser.find_element(
             By.XPATH, '//*[@id="password"]')
@@ -38,6 +39,9 @@ class Browser():
         password_input.send_keys(self.password)
         time.sleep(1)
         student_login_button.click()
+
+        if (self.get_current_url() == "https://newids.seu.edu.cn/authserver/login?service=https://newids.seu.edu.cn/authserver/login2.jsp"):
+            raise Exception()
 
     def get_page_source(self, url):
         '''获取目标页面的源码'''
@@ -102,8 +106,49 @@ class Browser():
             (By.XPATH, '//*[@id="app"]/div[1]/div/div[2]/div[2]/div[1]/div/div[1]/span/div[1]/div[2]/a')))
         result_button.click()
 
+    def close(self):
+        self.browser.close()
 
-test = Browser()
-test.login()
-test.daily_report()
-time.sleep(1)
+    def quit(self):
+        self.browser.quit()
+
+def info_analyse(info, cases):
+    if (cases == 0):
+        return info[:9]
+    if (cases == 1):
+        return re.search(" (.+?) ", info).group().strip()
+    if (cases == 2):
+        return info[-1:]
+
+fopen = open("C2P.txt", "r")
+userlist = fopen.readlines()
+
+for i in range(len(userlist)):
+    cardnumber = info_analyse(userlist[i].strip("\n"), 0)
+    password = info_analyse(userlist[i].strip("\n"), 1)
+    case = info_analyse(userlist[i].strip("\n"), 2)
+
+    repoter = Browser(cardnumber, password)
+    try:
+        repoter.login()
+    except:
+        repoter.quit()
+        print(str(cardnumber) + " Failed: Wrong Password.")
+        continue
+    try:
+        repoter.daily_report()
+    except:
+        repoter.quit()
+        print(str(cardnumber) + " Failed: Has Reported.")
+        continue
+    repoter.close()
+    print(str(cardnumber) + " Success.")
+    
+#test = Browser()
+#test.login()
+#test.daily_report()
+#time.sleep(1)
+#test.close()
+#
+#print("success.")
+#exit()
