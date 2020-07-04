@@ -120,6 +120,7 @@ def info_analyse(info, cases):
     if (cases == 2):
         return info[-1:]
 
+logs = []
 fopen = open("C2P.txt", "r")
 userlist = fopen.readlines()
 
@@ -134,13 +135,20 @@ for i in range(len(userlist)):
     except:
         repoter.quit()
         print(str(cardnumber) + " Failed: Wrong Password.")
+        logs.append(str(cardnumber) + " Failed: Wrong Password.")
         continue
     try:
         repoter.daily_report()
     except:
         repoter.quit()
         print(str(cardnumber) + " Failed: Has Reported.")
+        logs.append(str(cardnumber) + " Failed: Has Reported.")
         continue
     repoter.close()
+
     print(str(cardnumber) + " Success.")
-    
+    logs.append(str(cardnumber) + " Success.")
+
+print("Logs:")
+for log in logs:
+    print(log)
