@@ -144,11 +144,3 @@ for i in range(len(userlist)):
     repoter.close()
     print(str(cardnumber) + " Success.")
     
-#test = Browser()
-#test.login()
-#test.daily_report()
-#time.sleep(1)
-#test.close()
-#
-#print("success.")
-#exit()
