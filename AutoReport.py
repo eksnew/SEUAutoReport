@@ -57,7 +57,7 @@ class Browser():
         self.function_search("全校师生每日健康申报系统")
         # 切换为新窗口
         handles = self.browser.window_handles
-        self.browser.switch_to_window(handles[1])
+        self.browser.switch_to.window(handles[1])
         self.browser.get(self.get_current_url())
 
         # 点击"新增"按钮
@@ -72,7 +72,7 @@ class Browser():
         daily_temperature_input.send_keys("37")
         save_button.click()
         # 进行确认
-        self.browser.switch_to_default_content()
+        self.browser.switch_to.default_content()
         confirm_button = WebDriverWait(self.browser, 5).until(expected_conditions.element_to_be_clickable(
             (By.XPATH, '//*[@class="bh-dialog-btn bh-bg-primary bh-color-primary-5"]')))
         confirm_button.click()
@@ -81,7 +81,7 @@ class Browser():
         # 关闭新窗口
         self.browser.close()
         # 切换为旧窗口
-        self.browser.switch_to_window(handles[0])
+        self.browser.switch_to.window(handles[0])
 
     def function_search(self, function):
         '''
@@ -137,13 +137,14 @@ for i in range(len(userlist)):
         print(str(cardnumber) + " Failed: Wrong Password.")
         logs.append(str(cardnumber) + " Failed: Wrong Password.")
         continue
-    try:
-        repoter.daily_report()
-    except:
-        repoter.quit()
-        print(str(cardnumber) + " Failed: Has Reported.")
-        logs.append(str(cardnumber) + " Failed: Has Reported.")
-        continue
+    repoter.daily_report()
+    # try:
+    #     repoter.daily_report()
+    # except:
+    #     repoter.quit()
+    #     print(str(cardnumber) + " Failed: Has Reported.")
+    #     logs.append(str(cardnumber) + " Failed: Has Reported.")
+    #     continue
     repoter.close()
 
     print(str(cardnumber) + " Success.")
